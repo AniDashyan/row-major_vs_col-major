@@ -1,4 +1,3 @@
-```
 # Row-Major vs Column-Major Matrix Access Performance
 
 This repository explores the performance differences between **row-major** and **column-major** access of a 2D array (i.e., matrix). The program benchmarks the time taken to traverse a matrix in row-major order and in column-major order, demonstrating the performance differences due to memory access patterns and cache line efficiency.

@@ -83,7 +83,6 @@ jobs:
         fi
         
         # Command-line arguments (adjust as needed)
-        size_argument="--size 10000"  # Example size argument
         row_col_argument="--row 10000 --col 20000"  # Example row/col argument
 
         # Check if the file exists before trying to run it
@@ -92,10 +91,6 @@ jobs:
           echo "Executable found, running it"
           # Run executable with different arguments based on your preference
           if [ "$RUNNER_OS" == "Windows" ]; then
-            # For Windows, run the executable with size argument
-            "$executable_path" $size_argument
-          else
-            # For Linux/macOS, run the executable with row/col argument
             "$executable_path" $row_col_argument
           fi
         else

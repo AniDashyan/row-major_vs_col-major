@@ -90,7 +90,6 @@ jobs:
         if [ -f "$executable_path" ]; then
           echo "Executable found, running it"
           # Run executable with different arguments based on your preference
-          if [ "$RUNNER_OS" == "Windows" ]; then
             "$executable_path" $row_col_argument
           fi
         else

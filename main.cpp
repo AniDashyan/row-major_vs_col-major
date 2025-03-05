@@ -2,74 +2,74 @@
 #include <chrono>
 #include <iomanip>
 #include <vector>
+#include <cstdlib>
+#include <string>
 #include "kaizen.h"
 
 using namespace std::chrono;
 
+// Default matrix size
+size_t rows = 1000;
+size_t cols = 1000;
+
 void initializeMatrix(size_t rows, size_t cols, std::vector<std::vector<int>>& matrix) {
+    if (rows == 0 || cols == 0) return;
     for (size_t i = 0; i < rows; i++)
         for (size_t j = 0; j < cols; j++)
             matrix[i][j] = i + j;
 }
 
-auto row_major(size_t rows, size_t cols, std::vector<std::vector<int>>& matrix) {
-    volatile int product = 1;
-    auto start = steady_clock::now();
+void row_major(size_t rows, size_t cols, std::vector<std::vector<int>>& matrix) {
+    if (rows == 0 || cols == 0) return;
+
+    int product = 1;
     for (size_t i = 0; i < rows; i++)
         for (size_t j = 0; j < cols; j++)
             product *= matrix[i][j];
-    auto end = steady_clock::now();
-    return duration_cast<milliseconds>(end - start).count();
 }
 
-auto col_major(size_t rows, size_t cols, std::vector<std::vector<int>>& matrix) {
-    volatile int product = 1;
-    auto start = steady_clock::now();
+void col_major(size_t rows, size_t cols, std::vector<std::vector<int>>& matrix) {
+    if (rows == 0 || cols == 0) return;
+
+    int product = 1;
     for (size_t j = 0; j < cols; j++)
         for (size_t i = 0; i < rows; i++)
             product *= matrix[i][j];
-    auto end = steady_clock::now();
-    return duration_cast<milliseconds>(end - start).count();
 }
 
 int main(int argc, char *argv[]) {
     zen::cmd_args args(argv, argc);
-
-    // Get command-line options
-    auto size_opts = args.get_options("--size");
+    
     auto row_opts = args.get_options("--row");
     auto col_opts = args.get_options("--col");
 
-    size_t rows, cols;
-
-    // Determine dimensions based on arguments
-    if (!size_opts.empty()) {
-        rows = cols = static_cast<size_t>(std::atoi(size_opts[0].c_str()));
-        if (rows == 0) {
-            std::cerr << "Error: --size must be positive\n";
-            return 1;
-        }
-        if (!row_opts.empty() || !col_opts.empty()) {
-            std::cerr << "Error: Use either --size or --row/--col, not both\n";
-            return 1;
-        }
-    } else if (!row_opts.empty() && !col_opts.empty()) {
+    if (row_opts.empty() && col_opts.empty()) {
+        zen::log("None of the options are provided. Using default values", rows, "x", cols);
+    } 
+    else if (row_opts.empty()) {
+        cols = static_cast<size_t>(std::atoi(col_opts[0].c_str()));
+    } 
+    else if (col_opts.empty()) 
+        rows = static_cast<size_t>(std::atoi(row_opts[0].c_str()));
+    else {
         rows = static_cast<size_t>(std::atoi(row_opts[0].c_str()));
         cols = static_cast<size_t>(std::atoi(col_opts[0].c_str()));
-        if (rows == 0 || cols == 0) {
-            std::cerr << "Error: --row and --col must be positive\n";
-            return 1;
-        }
-    } else {
-        std::cerr << "Error: Provide --size or both --row and --col\n";
-        return 1;
     }
 
     std::vector<std::vector<int>> A(rows, std::vector<int>(cols));
     initializeMatrix(rows, cols, A);
-    auto row_time = row_major(rows, cols, A);
-    auto col_time = col_major(rows, cols, A);
 
+    auto start = steady_clock::now();
+    row_major(rows, cols, A);
+    auto end = steady_clock::now();
+
+    auto row_time = duration_cast<milliseconds>(end - start).count();
+
+    start = steady_clock::now();
+    col_major(rows, cols, A);
+    end = steady_clock::now();
+
+    auto col_time = duration_cast<milliseconds>(end - start).count();
 
     // Formatted output
     std::cout << std::fixed << std::setprecision(2);

@@ -49,12 +49,11 @@ cd row-major_vs_col-major
 Once built, run the program with the following command:
 
 ```bash
-./build/RowMajorvsColumnMajor [--size N] OR [--row R --col C]
+./build/RowMajorvsColumnMajor [--row R --col C]
 ```
 
 #### Command-Line Options
 
-- `--size N`: Defines a square matrix of size `N x N`.
 - `--row R --col C`: Defines a rectangular matrix with `R` rows and `C` columns.
 
 ### Example Output
@@ -62,7 +61,7 @@ Once built, run the program with the following command:
 For a matrix size of 10000 x 10000, you can run the program as:
 
 ```bash
-./build/RowMajorvsColumnMajor --size 10000
+./build/RowMajorvsColumnMajor --row 10000 --col 10000
 ```
 
 This will output something like:

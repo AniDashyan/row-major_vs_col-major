@@ -83,7 +83,7 @@ jobs:
         fi
         
         # Command-line arguments (adjust as needed)
-        row_col_argument="--row 10000 --col 20000"  # Example row/col argument
+        row_col_argument="--row 100 --col 100"  # Example row/col argument
 
         # Check if the file exists before trying to run it
         echo "Checking if executable exists: $executable_path"
